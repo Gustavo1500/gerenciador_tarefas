@@ -33,25 +33,52 @@ class TaskManager:
     desc: str
 
     # --- Funções ---
-    def criar_tarefa(self, nome, desc):
-        pass
+    def criar_tarefa(self, obj):
+        print(f"Tarefa criada: {obj}")
 
-    def mod_tarefa(self, nome, desc):
-        pass
+    def mod_tarefa(self, obj):
+        print(f"Tarefa modificada: {obj}")
 
-    def remover_tarefa(self, nome, desc):
-        pass
+    def remover_tarefa(self, obj):
+        print(f"Tarefa removida: {obj}")
 
-    def listar_tarefas(self):
-        pass
+    @staticmethod
+    def listar_tarefas():
+        print("Lista:")
 
-    def feito_tarefa(self, nome, desc):
-        pass
+    def feito_tarefa(self, obj):
+        print(f"Tarefa concluída: {obj}")
 
+    @staticmethod
+    def add_arg(op):
+        op.add_argument("nome", help="Nome da tarefa")
+        op.add_argument("descricao", help="Descrição da tarefa")
 
-def add_arg(op):
-    op.add_argument("nome", help="Nome da tarefa")
-    op.add_argument("descricao", help="Descrição da tarefa")
+    # --- Handlers ---
+    @staticmethod
+    def handler_add(c):
+        task = TaskManager(c.nome, c.descricao)
+        task.criar_tarefa(task)
+
+    @staticmethod
+    def handler_mod(c):
+        task = TaskManager(c.nome, c.descricao)
+        task.mod_tarefa(task)
+
+    @staticmethod
+    def handler_re(c):
+        task = TaskManager(c.nome, c.descricao)
+        task.remover_tarefa(task)
+
+    @staticmethod
+    def handler_list(c):
+        task = TaskManager(c.nome, c.descricao)
+        task.listar_tarefas()
+
+    @staticmethod
+    def handler_done(c):
+        task = TaskManager(c.nome, c.descricao)
+        task.feito_tarefa(task)
 
 
 # --- Parsers ---
@@ -60,21 +87,34 @@ sub_parsers = parser.add_subparsers(
     dest="Comando", required=True, help="Comandos disponíveis"
 )
 
+# Criar Tarefa
 adicionar = sub_parsers.add_parser(name="adicionar", help="Adiciona uma tarefa")
-add_arg(adicionar)
+TaskManager.add_arg(adicionar)
+adicionar.set_defaults(function=TaskManager.handler_add)
 
+# Modificar Tarefa
 modificar = sub_parsers.add_parser(name="modificar", help="Modifica uma tarefa")
-add_arg(modificar)
+TaskManager.add_arg(modificar)
+modificar.set_defaults(function=TaskManager.handler_mod)
 
+# Remover Tarefa
 remover = sub_parsers.add_parser(name="remover", help="Remove uma tarefa")
-add_arg(remover)
+TaskManager.add_arg(remover)
+remover.set_defaults(function=TaskManager.handler_re)
 
+# Lista de Tarefas
 lista = sub_parsers.add_parser(name="lista", help="Lista todas as tarefas abertas")
+TaskManager.listar_tarefas()
+lista.set_defaults(function=TaskManager.handler_list)
 
+# Tarefa Feita
 feito = sub_parsers.add_parser(name="feito", help="Completa uma tarefa")
-add_arg(feito)
+TaskManager.add_arg(feito)
+feito.set_defaults(function=TaskManager.handler_done)
 
 args = parser.parse_args()
 
+if hasattr(args, "function"):
+    args.function(args)
 
 print("Done")
