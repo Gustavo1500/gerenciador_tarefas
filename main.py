@@ -3,7 +3,14 @@ import argparse
 from db import feito_task, insert_task, listar_task, mod_task, re_task
 
 """
-Descrição de como funciona
+Exemplo de comando para cada operação:
+CRIAR TAREFA: python main.py adicionar "Estudar X" "Estudar X na segunda-feira"
+MODIFICAR TAREFA: python main.py modificar "Estudar X" "Estudar X na terça-feira"
+REMOVER TAREFA: python main.py remover "Estudar X"
+LISTAR TAREFAS: python main.py lista
+COMPLETAR TAREFA: python main.py feito "Estudar X"
+
+PostgreSQL usado para armazenar as tarefas e realizar as operações.
 """
 
 
