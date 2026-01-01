@@ -1,5 +1,4 @@
 import argparse
-from dataclasses import dataclass
 
 from db import feito_task, insert_task, listar_task, mod_task, re_task
 
@@ -9,11 +8,7 @@ Descrição de como funciona
 
 
 # --- Classe das Tarefas ---
-@dataclass
 class TaskManager:
-    nome: str
-    descricao: str
-
     # --- Funções ---
     @staticmethod
     def criar_tarefa(obj):

@@ -59,7 +59,7 @@ def re_task(task):
     """Remover uma tarefa na base de dados."""
     print("Removendo Tarefa...")
     task_sql = """DELETE FROM tasks WHERE nome = %s;"""
-    task_data = task
+    task_data = (task,)
     try:
         with get_connection() as conn:
             with conn.cursor() as cur:
@@ -95,7 +95,7 @@ def feito_task(task):
     """Completar uma tarefa na base de dados."""
     print("Completando Tarefa...")
     task_sql = """DELETE FROM tasks WHERE nome = %s;"""
-    task_data = task
+    task_data = (task,)
     try:
         with get_connection() as conn:
             with conn.cursor() as cur:
