@@ -1,28 +1,10 @@
 import argparse
 from dataclasses import dataclass
 
+from db import feito_task, insert_task, listar_task, mod_task, re_task
+
 """
-Tasks:
-ADD:
-- Name of Task
-- Description
-Example: python main.py add "Walk" "Go for a walk on saturday."
-
-MODIFY:
-- Name of Task
-- Description
-Example: python main.py modify "Walk" "Go for a walk on wednesday."
-
-REMOVE:
-- Name of Task
-Example: python main.py remove "Walk"
-
-LIST:
-Example: python main.py list
-
-DONE:
-- Name of Task
-Example: python main.py done "Walk"
+Descrição de como funciona
 """
 
 
@@ -30,55 +12,38 @@ Example: python main.py done "Walk"
 @dataclass
 class TaskManager:
     nome: str
-    desc: str
+    descricao: str
 
     # --- Funções ---
-    def criar_tarefa(self, obj):
+    @staticmethod
+    def criar_tarefa(obj):
+        insert_task(obj)
         print(f"Tarefa criada: {obj}")
 
-    def mod_tarefa(self, obj):
+    @staticmethod
+    def mod_tarefa(obj):
+        mod_task(obj)
         print(f"Tarefa modificada: {obj}")
 
-    def remover_tarefa(self, obj):
+    @staticmethod
+    def remover_tarefa(obj):
+        re_task(obj.nome)
         print(f"Tarefa removida: {obj}")
 
     @staticmethod
-    def listar_tarefas():
+    def listar_tarefas(obj):
+        listar_task()
         print("Lista:")
 
-    def feito_tarefa(self, obj):
+    @staticmethod
+    def feito_tarefa(obj):
+        feito_task(obj.nome)
         print(f"Tarefa concluída: {obj}")
 
     @staticmethod
     def add_arg(op):
         op.add_argument("nome", help="Nome da tarefa")
         op.add_argument("descricao", help="Descrição da tarefa")
-
-    # --- Handlers ---
-    @staticmethod
-    def handler_add(c):
-        task = TaskManager(c.nome, c.descricao)
-        task.criar_tarefa(task)
-
-    @staticmethod
-    def handler_mod(c):
-        task = TaskManager(c.nome, c.descricao)
-        task.mod_tarefa(task)
-
-    @staticmethod
-    def handler_re(c):
-        task = TaskManager(c.nome, c.descricao)
-        task.remover_tarefa(task)
-
-    @staticmethod
-    def handler_list(c):
-        task = TaskManager(c.nome, c.descricao)
-        task.listar_tarefas()
-
-    @staticmethod
-    def handler_done(c):
-        task = TaskManager(c.nome, c.descricao)
-        task.feito_tarefa(task)
 
 
 # --- Parsers ---
@@ -90,27 +55,26 @@ sub_parsers = parser.add_subparsers(
 # Criar Tarefa
 adicionar = sub_parsers.add_parser(name="adicionar", help="Adiciona uma tarefa")
 TaskManager.add_arg(adicionar)
-adicionar.set_defaults(function=TaskManager.handler_add)
+adicionar.set_defaults(function=TaskManager.criar_tarefa)
 
 # Modificar Tarefa
 modificar = sub_parsers.add_parser(name="modificar", help="Modifica uma tarefa")
 TaskManager.add_arg(modificar)
-modificar.set_defaults(function=TaskManager.handler_mod)
+modificar.set_defaults(function=TaskManager.mod_tarefa)
 
 # Remover Tarefa
 remover = sub_parsers.add_parser(name="remover", help="Remove uma tarefa")
-TaskManager.add_arg(remover)
-remover.set_defaults(function=TaskManager.handler_re)
+remover.add_argument("nome", help="Nome da tarefa")
+remover.set_defaults(function=TaskManager.remover_tarefa)
 
 # Lista de Tarefas
 lista = sub_parsers.add_parser(name="lista", help="Lista todas as tarefas abertas")
-TaskManager.listar_tarefas()
-lista.set_defaults(function=TaskManager.handler_list)
+lista.set_defaults(function=TaskManager.listar_tarefas)
 
 # Tarefa Feita
 feito = sub_parsers.add_parser(name="feito", help="Completa uma tarefa")
-TaskManager.add_arg(feito)
-feito.set_defaults(function=TaskManager.handler_done)
+feito.add_argument("nome", help="Nome da tarefa")
+feito.set_defaults(function=TaskManager.feito_tarefa)
 
 args = parser.parse_args()
 
