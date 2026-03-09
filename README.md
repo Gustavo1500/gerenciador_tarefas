@@ -52,4 +52,4 @@ python main.py adicionar "Estudar X" "Estudar X na segunda-feira"
 ```
 
 ---
-**Desenvolvido por [Gustavo de Matos Roldão]**
+**Desenvolvido por [Gustavo1500]**
